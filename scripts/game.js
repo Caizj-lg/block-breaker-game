@@ -883,18 +883,25 @@ function circleRectCollision(cx, cy, cr, rx, ry, rw, rh) {
 }
 
 function calculateBounce(ball, block, radius) {
-  const blockCenterX = block.x + block.width / 2
-  const blockCenterY = block.y + block.height / 2
+  // 与 utils.js 保持一致：根据最小重叠轴反转速度分量
+  const overlapLeft = ball.x + radius - block.x
+  const overlapRight = block.x + block.width - (ball.x - radius)
+  const overlapTop = ball.y + radius - block.y
+  const overlapBottom = block.y + block.height - (ball.y - radius)
 
-  const distanceX = ball.x - blockCenterX
-  const distanceY = ball.y - blockCenterY
+  const minOverlapX = Math.min(overlapLeft, overlapRight)
+  const minOverlapY = Math.min(overlapTop, overlapBottom)
 
-  const angle = Math.atan2(distanceY, distanceX)
+  let newDx = ball.dx
+  let newDy = ball.dy
 
-  return {
-    dx: Math.cos(angle) * ball.speed,
-    dy: Math.sin(angle) * ball.speed,
+  if (minOverlapX < minOverlapY) {
+    newDx = -ball.dx
+  } else {
+    newDy = -ball.dy
   }
+
+  return { dx: newDx, dy: newDy }
 }
 
 function drawRoundRect(ctx, x, y, width, height, radius) {
