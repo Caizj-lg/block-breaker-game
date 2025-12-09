@@ -198,21 +198,31 @@ function createBlocks(level) {
   const blocks = []
   const { cols, width, height, padding, topOffset, rows } = CONFIG.block
 
+  // 根据画布宽度动态缩放方块尺寸，避免在小屏（手机）上溢出导致无法清空关卡
+  const availableWidth = game.canvasWidth
+  const scaledWidth = Math.max(
+    8,
+    Math.min(width, (availableWidth - (cols - 1) * padding) / cols),
+  )
+  const scale = scaledWidth / width
+  const scaledPadding = padding * scale
+  const scaledHeight = height * scale
+
   // 根据关卡增加行数
   const actualRows = Math.min(rows + Math.floor(level / 2), 12)
 
   // 计算起始位置使方块居中
-  const totalWidth = cols * width + (cols - 1) * padding
+  const totalWidth = cols * scaledWidth + (cols - 1) * scaledPadding
   const startX = (game.canvasWidth - totalWidth) / 2
 
   // 生成彩色方块
   for (let row = 0; row < actualRows; row++) {
     for (let col = 0; col < cols; col++) {
       blocks.push({
-        x: startX + col * (width + padding),
-        y: topOffset + row * (height + padding),
-        width: width,
-        height: height,
+        x: startX + col * (scaledWidth + scaledPadding),
+        y: topOffset + row * (scaledHeight + scaledPadding),
+        width: scaledWidth,
+        height: scaledHeight,
         color: CONFIG.colors.blocks[row % CONFIG.colors.blocks.length],
         destroyed: false,
         isWall: false,
