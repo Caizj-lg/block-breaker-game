@@ -198,30 +198,45 @@ function createBlocks(level) {
   const blocks = []
   const { cols, width, height, padding, topOffset, rows } = CONFIG.block
 
-  // 根据画布宽度动态缩放方块尺寸，确保所有砖块完整显示
+  // 根据画布尺寸动态缩放方块，确保所有砖块完整显示
   // 计算原始总宽度
   const originalTotalWidth = cols * width + (cols - 1) * padding
-  // 可用宽度（左右各留15px边距）
-  const margin = 15
-  const availableWidth = game.canvasWidth - margin * 2
+  // 可用宽度（左右各留12px边距）
+  const marginX = 12
+  const availableWidth = game.canvasWidth - marginX * 2
   
-  // 计算缩放比例
-  let scale = 1
+  // 根据关卡增加行数
+  const actualRows = Math.min(rows + Math.floor(level / 2), 12)
+  
+  // 计算原始总高度
+  const originalTotalHeight = actualRows * height + (actualRows - 1) * padding
+  // 可用高度（topOffset已包含顶部信息栏，底部留出挡板区域）
+  const bottomMargin = CONFIG.paddle.offsetBottom + CONFIG.paddle.height + 25
+  const availableHeight = game.canvasHeight - topOffset - bottomMargin
+  
+  // 计算宽度缩放比例
+  let scaleWidth = 1
   if (originalTotalWidth > availableWidth) {
-    scale = availableWidth / originalTotalWidth
+    scaleWidth = availableWidth / originalTotalWidth
   }
+  
+  // 计算高度缩放比例
+  let scaleHeight = 1
+  if (originalTotalHeight > availableHeight) {
+    scaleHeight = availableHeight / originalTotalHeight
+  }
+  
+  // 取两者中较小的值，确保宽度和高度都能完整显示
+  const scale = Math.min(scaleWidth, scaleHeight)
   
   // 应用缩放
   const scaledWidth = width * scale
   const scaledPadding = padding * scale
   const scaledHeight = height * scale
 
-  // 根据关卡增加行数
-  const actualRows = Math.min(rows + Math.floor(level / 2), 12)
-
-  // 计算起始位置使方块居中（左右各留margin边距）
+  // 计算起始位置使方块居中（左右各留marginX边距）
   const totalWidth = cols * scaledWidth + (cols - 1) * scaledPadding
-  const startX = margin + (availableWidth - totalWidth) / 2
+  const startX = marginX + (availableWidth - totalWidth) / 2
 
   // 生成彩色方块
   for (let row = 0; row < actualRows; row++) {
