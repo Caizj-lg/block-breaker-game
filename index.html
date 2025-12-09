@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>方块破坏王 - Block Breaker King</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+    
+    <!-- 菜单界面 -->
+    <div id="menu-screen" class="overlay">
+      <h1 class="title">方块破坏王</h1>
+      <p class="subtitle">Block Breaker King</p>
+      <button id="start-btn" class="btn btn-primary">开始游戏</button>
+      <div class="instructions">
+        <p>移动手指/鼠标控制挡板</p>
+        <p>点击屏幕发射小球</p>
+        <p class="power-ups">S = 分裂球 | W = 散射球</p>
+      </div>
+    </div>
+    
+    <!-- 游戏结束界面 -->
+    <div id="gameover-screen" class="overlay hidden">
+      <h2 class="title gameover">游戏结束</h2>
+      <p class="score-text">得分: <span id="final-score">0</span></p>
+      <p class="level-text">到达第 <span id="final-level">1</span> 关</p>
+      <button id="restart-btn" class="btn btn-primary">再来一局</button>
+    </div>
+    
+    <!-- 通关界面 -->
+    <div id="levelup-screen" class="overlay hidden">
+      <h2 class="title levelup">恭喜通关!</h2>
+      <p class="score-text">得分: <span id="levelup-score">0</span></p>
+      <p class="level-text">下一关: 第 <span id="next-level">2</span> 关</p>
+      <button id="nextlevel-btn" class="btn btn-success">继续挑战</button>
+    </div>
+  </div>
+  
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/game.js"></script>
+</body>
+</html>
